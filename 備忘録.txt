@@ -1,0 +1,5 @@
+備忘録
+
+
+・bootstrap.min.cssをコピーするとき、.cssは拡張子なので、エクスプローラーのbootstrap.minをコピーする。間違って、bootstrap.min.css.mapをコピーしてもうまく動かない。
+　style.cssと同じ、カスケードスタイルとなっているものはず。

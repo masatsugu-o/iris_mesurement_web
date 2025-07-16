@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>CSVデータの棒グラフ表示</title>
+</head>
+<body>
+    <h1>CSVをアップロードして棒グラフを表示</h1>
+    <form method="POST" enctype="multipart/form-data">
+        <input type="file" name="file" accept=".csv">
+        <button type="submit">グラフ化</button>
+    </form>
+
+    {% if graph %}
+    <h2>生成されたグラフ</h2>
+    <img src="data:image/png;base64,{{ graph }}" alt="棒グラフ">
+    {% endif %}
+</body>
+</html>
