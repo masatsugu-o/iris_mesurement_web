@@ -2,9 +2,10 @@ from apps.app import db
 from apps.auth.forms import SignUpForm, LoginForm
 from apps.crud.models import User
 from flask import Blueprint, render_template, flash, url_for, redirect, request, current_app, session
-from flask_login import login_user, logout_user, login_required
+from flask_login import login_user, logout_user, login_required, current_user
 from pathlib import Path
 from apps.iris.models import Customer
+from apps.iris.forms import CustomerForm
 
 # Blueprintを使ってauthを生成する
 iris = Blueprint(
@@ -17,7 +18,8 @@ iris = Blueprint(
 # indexエンドポイントを作成する
 @iris.route("/")
 def index():
-    return render_template("iris/index.html")
+    form = CustomerForm()
+    return render_template("iris/index.html", form=form)
 
 # 以下、小川改造分
 @iris.route("/run_external", methods=["GET"])
@@ -50,6 +52,7 @@ def run_external():
 
     # 顧客データに測定結果を組み込んで保存
     new_customer = Customer(
+        user_id=current_user.id,
         customer_id=customer_data["customer_id"],
         name=customer_data["name"],
         gender=customer_data["gender"],
