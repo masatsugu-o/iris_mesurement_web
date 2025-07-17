@@ -58,7 +58,8 @@ def login():
         if user is not None and user.verify_password(form.password.data):
             # ユーザー情報をセッションに書き込む
             login_user(user)
-            return redirect(url_for("detector.index"))
+            #return redirect(url_for("detector.index"))
+            return redirect(url_for("iris.index"))
         
         # ログイン失敗メッセージを設定する
         flash("メールアドレスかパスワードが不正です")
