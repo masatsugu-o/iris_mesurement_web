@@ -11,14 +11,8 @@
     {% endif %}
    {% endwith %}
 
-   <!--簡易測定にジャンプ -->
-   <div class="col-md-10 text-right dt-image-register-btn">
-    <!-- <a href="{{ url_for('detector.upload_image') }}" class="btn btn-primary">画像新規登録</a> -->
-    <!--小川変更分-->
-    <a href="{{ url_for('iris.run_external') }}" class="btn btn-primary">簡易測定</a>
-   </div>
 
-  <!-- 顧客情報フォーム -->
+   <!-- 顧客情報フォーム -->
     <div class="container mt-4">
       <form method="POST" action="{{ url_for('iris.save_customer_temp') }}">
         {{ form.hidden_tag() }}  <!-- CSRFトークン含む -->
