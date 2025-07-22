@@ -221,11 +221,22 @@ def test_increase_small_circle_brightness(event):
         if tmp_r + 1 <= max_r:
            tmp_r += 1
            drawing_test_image(max_r, max_g, max_b, tmp_r, max_g, max_b)
-    else:
+    elif measure_num_to_selecter[0][measure_num] == 3:
         #global tmp_b
         if tmp_b + 1 <= max_b:
            tmp_b += 1
-           drawing_test_image(max_r, max_g, max_b, max_r, max_g, tmp_b)    
+           drawing_test_image(max_r, max_g, max_b, max_r, max_g, tmp_b)
+    elif measure_num_to_selecter[0][measure_num] == 4:
+        if tmp_r + 1 <= max_r and tmp_g + 1 <= max_g:
+            tmp_r += 1
+            tmp_g += 1
+            drawing_test_image(max_r, max_g, max_b, tmp_r, tmp_g, max_b)
+    elif measure_num_to_selecter[0][measure_num] == 5:
+        if tmp_r - 1 >= 0 and tmp_g - 1 >= 0 :
+            tmp_r -= 1
+            tmp_g -= 1
+            drawing_test_image(tmp_r, tmp_g, max_b, tmp_r, tmp_g, max_b)    
+
          
 #########################
 # 測定画面で8キー押下時に実行：小円の輝度ダウン（ホワイトは反対なことに注意）
@@ -250,11 +261,22 @@ def test_decrease_small_circle_brightness(eventr):
         if tmp_r - 1 >= 0:
            tmp_r -= 1
            drawing_test_image(max_r, max_g, max_b, tmp_r, max_g, max_b)
-    else:
+    elif measure_num_to_selecter[0][measure_num] == 3:
         #global tmp_b
         if tmp_b - 1 >= 0:
            tmp_b -= 1
-           drawing_test_image(max_r, max_g, max_b, max_r, max_g, tmp_b)    
+           drawing_test_image(max_r, max_g, max_b, max_r, max_g, tmp_b)
+    elif measure_num_to_selecter[0][measure_num] == 4:
+        if tmp_r - 1 >= 0 and tmp_g - 1 >= 0:
+            tmp_r -= 1
+            tmp_g -= 1
+            drawing_test_image(max_r, max_g, max_b, tmp_r, tmp_g, max_b)
+    elif measure_num_to_selecter[0][measure_num] == 5:
+        if tmp_r + 1 and tmp_g + 1 <= 255:
+            tmp_r += 1
+            tmp_g += 1
+            drawing_test_image(tmp_r, tmp_g, max_b, tmp_r, tmp_g, max_b)
+
 
 #########################
 # 測定画面でEnterキー押下時に実行：小円が見えた場合
@@ -305,7 +327,7 @@ def test_i_can_see_now(even):
         my_canvas.destroy()
         tmp_r=max_r
         measure_num=measure_num+1
-    else:
+    elif measure_num_to_selecter[0][measure_num] == 3:
         #global tmp_b
 
         file_write('青色視感度測定結果', max_r, max_g, max_b, max_r, max_g, tmp_b)
@@ -317,13 +339,37 @@ def test_i_can_see_now(even):
         my_canvas.destroy()
         tmp_b=max_b
         measure_num=measure_num+1
+    elif measure_num_to_selecter[0][measure_num] == 4:
+        file_write('赤緑視感度測定結果', max_r, max_g, max_b, tmp_r, tmp_g, max_b)
+
+         # 測定前画面2へ移動
+        pre_wb_test_frame.tkraise()
+        pre_wb_test_frame.focus_set()
+        #my_canvas.delete('all')
+        my_canvas.destroy()
+        tmp_r=max_r
+        tmp_g=max_g
+        measure_num=measure_num+1        
 
         # 結果をCSVファイルに保存
         save_result_file()
 
         #測定終了画面へ移動
         end_frame.tkraise()
-        end_frame.focus_set()                
+        end_frame.focus_set() 
+    elif measure_num_to_selecter[0][measure_num] == 5:
+        file_write('ホワイト(RG)決定結果', tmp_r, tmp_g, max_b, tmp_r, tmp_g, max_b)
+
+        # 小川変更
+        tmp_r=max_r
+        tmp_g=max_g
+
+        # 測定前画面へ移動
+        pre_wb_test_frame.tkraise()
+        pre_wb_test_frame.focus_set()
+        my_canvas.destroy()
+        measure_num=measure_num+1
+
 
 
 #########################
@@ -336,12 +382,13 @@ if __name__ == '__main__' or __name__ == '__irishue_simple_test_app_v05__':
     # 測定の設定(配列の値はselecterの値)
     ################
     # 現在３がエンドになるようになってるので、そこを直さないといけない 
-    measure_num_to_selecter=np.empty((1,5))
+    measure_num_to_selecter=np.empty((1,6))
     measure_num_to_selecter[0][0]=0
-    measure_num_to_selecter[0][1]=1
-    measure_num_to_selecter[0][2]=2
-    measure_num_to_selecter[0][3]=1
+    measure_num_to_selecter[0][1]=5
+    measure_num_to_selecter[0][2]=1
+    measure_num_to_selecter[0][3]=2
     measure_num_to_selecter[0][4]=3
+    measure_num_to_selecter[0][5]=4
     measure_num=0
 
     # ################
