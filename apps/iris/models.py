@@ -6,7 +6,7 @@ class Customer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     # user_idはusersテーブルのidカラムを外部キーとして設定する
     user_id = db.Column(db.String, db.ForeignKey("users.id"))
-    customer_id = db.Column(db.String(20), unique=True, nullable=False)
+    customer_id = db.Column(db.String(20), unique=False, nullable=False)
     name = db.Column(db.String(100), nullable=False)
     gender = db.Column(db.String(10), nullable=False)
     memo = db.Column(db.Text)
