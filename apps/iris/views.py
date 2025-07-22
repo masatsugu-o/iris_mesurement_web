@@ -6,6 +6,7 @@ from flask_login import login_user, logout_user, login_required, current_user
 from pathlib import Path
 from apps.iris.models import Customer
 from apps.iris.forms import CustomerForm
+import json
 
 # Blueprintを使ってauthを生成する
 iris = Blueprint(
@@ -41,14 +42,23 @@ def run_external():
         flash("顧客情報が見つかりません")
         return redirect(url_for("iris.index"))
 
-    # 簡易測定処理（例）
-    #result = perform_measurement()
-    result={
-        "height": "172cm",
-        "weight": "64kg",
-        "bmi": "21.6",
-        "blood_pressure": "120/80"
-    }
+    # # 簡易測定処理（例）
+    # #result = perform_measurement()
+    # result={
+    #     "height": "172cm",
+    #     "weight": "64kg",
+    #     "bmi": "21.6",
+    #     "blood_pressure": "120/80"
+    # }
+
+    result_path = Path(current_app.root_path) .parent / "result.json"
+    if result_path.exists():
+        with open(result_path, "r", encoding="utf-8") as f:
+            result = json.load(f)
+            print(result)
+    else:
+        flash("測定結果が見つかりませんでした")
+        return redirect(url_for("iris.index"))
 
     # 顧客データに測定結果を組み込んで保存
     new_customer = Customer(
@@ -57,7 +67,7 @@ def run_external():
         name=customer_data["name"],
         gender=customer_data["gender"],
         memo=customer_data["memo"],
-        result=result,
+        result=json.dumps(result, ensure_ascii=False),
     )
     db.session.add(new_customer)
     db.session.commit()
