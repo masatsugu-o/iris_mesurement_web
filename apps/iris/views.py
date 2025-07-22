@@ -27,7 +27,7 @@ def index():
 def run_external():
     import subprocess
 
-    script_path = Path(current_app.root_path) / "iris" / "irishue_measurement_v01_r3.py"
+    script_path = Path(current_app.root_path) / "iris" / "irishue_measurement_v01_r3_flask.py"
     try:
         # Python スクリプトをサブプロセスとして実行
         subprocess.run(["python", str(script_path)], check=True)

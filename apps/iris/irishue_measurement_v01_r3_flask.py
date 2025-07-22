@@ -41,7 +41,8 @@ def drawing_test_image(big_r, big_g, big_b, target_r, target_g ,target_b):
     big_circle_radius = 540
 
     # 輝度を変化させる小円の半径を設定
-    target_radius = viewing_angle.get()
+    #target_radius = viewing_angle.get()
+    target_radius = viewing_angle
 
     # 円の中央からの横位置
     distance = 0
@@ -92,18 +93,28 @@ def save_result_file():
     date_and_time = date_and_time.replace(' ', '_')
     date_and_time = date_and_time[:-7]
 
-    # 視野角1度の場合
-    if viewing_angle.get() == 13:
+    # # 視野角1度の場合
+    # if viewing_angle.get() == 13:
+    #     viewing_angle_str ='1'
+    # # 視野角2度の場合
+    # elif viewing_angle.get() == 26:
+    #     viewing_angle_str ='2'
+    # # 視野角4度の場合
+    # elif viewing_angle.get() == 52:
+    #     viewing_angle_str ='4'
+
+     # 視野角1度の場合
+    if viewing_angle == 13:
         viewing_angle_str ='1'
     # 視野角2度の場合
-    elif viewing_angle.get() == 26:
+    elif viewing_angle == 26:
         viewing_angle_str ='2'
     # 視野角4度の場合
-    elif viewing_angle.get() == 52:
-        viewing_angle_str ='4'
+    elif viewing_angle == 52:
+        viewing_angle_str ='4'   
 
     # resultをファイルに保存
-    result_file=open(name_entry_input_frame.get() + '_' + path.splitext(path.basename(__file__))[0] + '_result_' + date_and_time + '_angle=' + viewing_angle_str + '.csv','w')
+    result_file=open(fixed_filename_prefix + '_' + path.splitext(path.basename(__file__))[0] + '_result_' + date_and_time + '_angle=' + viewing_angle_str + '.csv','w')
     np.savetxt(result_file, result, delimiter=',', fmt="%s")
     result_file.close()
 
@@ -389,39 +400,43 @@ if __name__ == '__main__' or __name__ == '__irishue_simple_test_app_v05__':
     ################
     # 名前入力画面
     ################
-    # input_frameの作成と設置
-    input_frame = ttk.Frame(root, style='My.TFrame')
-    input_frame.grid(row=0, column=0, sticky='nsew')
 
-    # 名前入力ウィジェットの作成
-    name_label_input_frame = ttk.Label(input_frame, text='お名前または測定番号を入力してください。\n入力内容が測定結果ファイル名の先頭になります。\n\n\
-注意：日本語入力で入力した場合は、「測定開始」ボタンを押す前に日本語入力をOFFにしてください。', foreground='white', background='black', font=('MSゴシック', '10'))
-    name_entry_input_frame = ttk.Entry(input_frame, font=('MSゴシック', '10'))
+    fixed_filename_prefix = "result"
+    viewing_angle=26
 
-    # 名前入力ウィジェットの設置
-    name_label_input_frame.place(x = 100, y = 240)
-    name_entry_input_frame.place(x = 100, y = 320)
+#     # input_frameの作成と設置
+#     input_frame = ttk.Frame(root, style='My.TFrame')
+#     input_frame.grid(row=0, column=0, sticky='nsew')
 
-    # 測定開始ボタンの作成
-    button_input_frame = ttk.Button(input_frame, text='測定開始', command=lambda: to_pre_test_frame(pre_test_frame), style='My.TButton')
-    # 測定開始ボタンを設置
-    button_input_frame.place(x = 300, y = 400)
+#     # 名前入力ウィジェットの作成
+#     name_label_input_frame = ttk.Label(input_frame, text='お名前または測定番号を入力してください。\n入力内容が測定結果ファイル名の先頭になります。\n\n\
+# 注意：日本語入力で入力した場合は、「測定開始」ボタンを押す前に日本語入力をOFFにしてください。', foreground='white', background='black', font=('MSゴシック', '10'))
+#     name_entry_input_frame = ttk.Entry(input_frame, font=('MSゴシック', '10'))
 
-    # 小円の視野角を選択するラジオボタンを設置
-    # チェック有無変数
-    viewing_angle = tk.IntVar()
-    # value=26（小円視野角：2度）のラジオボタンにチェックを入れる
-    viewing_angle.set(26)
-    # ラジオボタン作成
-    rdo2_1 = tk.Radiobutton(input_frame, value=13, variable=viewing_angle, text='小円視野角：1度')
-    rdo2_1.place(x=10, y=80)
-    rdo2_2 = tk.Radiobutton(input_frame, value=26, variable=viewing_angle, text='小円視野角：2度')
-    rdo2_2.place(x=10, y=100)
-    rdo2_3 = tk.Radiobutton(input_frame, value=52, variable=viewing_angle, text='小円視野角：4度')
-    rdo2_3.place(x=10, y=120)
+#     # 名前入力ウィジェットの設置
+#     name_label_input_frame.place(x = 100, y = 240)
+#     name_entry_input_frame.place(x = 100, y = 320)
 
-    # Escapeキーによる強制終了 #
-    input_frame.bind('<Escape>', exit)
+#     # 測定開始ボタンの作成
+#     button_input_frame = ttk.Button(input_frame, text='測定開始', command=lambda: to_pre_test_frame(pre_test_frame), style='My.TButton')
+#     # 測定開始ボタンを設置
+#     button_input_frame.place(x = 300, y = 400)
+
+#     # 小円の視野角を選択するラジオボタンを設置
+#     # チェック有無変数
+#     viewing_angle = tk.IntVar()
+#     # value=26（小円視野角：2度）のラジオボタンにチェックを入れる
+#     viewing_angle.set(26)
+#     # ラジオボタン作成
+#     rdo2_1 = tk.Radiobutton(input_frame, value=13, variable=viewing_angle, text='小円視野角：1度')
+#     rdo2_1.place(x=10, y=80)
+#     rdo2_2 = tk.Radiobutton(input_frame, value=26, variable=viewing_angle, text='小円視野角：2度')
+#     rdo2_2.place(x=10, y=100)
+#     rdo2_3 = tk.Radiobutton(input_frame, value=52, variable=viewing_angle, text='小円視野角：4度')
+#     rdo2_3.place(x=10, y=120)
+
+#     # Escapeキーによる強制終了 #
+#     input_frame.bind('<Escape>', exit)
 
 
     ################
@@ -510,8 +525,9 @@ if __name__ == '__main__' or __name__ == '__irishue_simple_test_app_v05__':
     ################
     # プログラムの開始処理
     ################
-    # input_frameを前面にする
-    input_frame.tkraise()
-    input_frame.focus_set()
+    # # input_frameを前面にする
+    # input_frame.tkraise()
+    # input_frame.focus_set()
 
+    root.after(100, lambda: to_pre_test_frame(pre_test_frame))
     root.mainloop()

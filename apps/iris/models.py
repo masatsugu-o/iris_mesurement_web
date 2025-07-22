@@ -2,7 +2,7 @@ from datetime import datetime
 from apps.app import db
 
 class Customer(db.Model):
-    __tablename__ = "costomers"
+    __tablename__ = "customers"
     id = db.Column(db.Integer, primary_key=True)
     # user_idはusersテーブルのidカラムを外部キーとして設定する
     user_id = db.Column(db.String, db.ForeignKey("users.id"))
