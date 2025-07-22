@@ -21,8 +21,25 @@ import datetime
 import os
 from os import path
 
+import json
+
 # # weber_testをインポート
 # import weber_test as wb
+
+#########################
+# 結果のJSON化
+#########################
+def get_result_as_json():
+    global result
+    # Structured ndarray → list of dict に変換
+    result_list = [ { key: row[key].item() if isinstance(row[key], np.generic) else row[key]
+                      for key in result.dtype.names }
+                    for row in result ]
+    
+    with open("result.json", "w", encoding="utf-8") as f:
+        json.dump(result_list, f, ensure_ascii=False, indent=2)
+
+    return
 
 
 #########################
@@ -353,6 +370,9 @@ def test_i_can_see_now(even):
 
         # 結果をCSVファイルに保存
         save_result_file()
+
+        # JSONも出力
+        get_result_as_json()
 
         #測定終了画面へ移動
         end_frame.tkraise()
