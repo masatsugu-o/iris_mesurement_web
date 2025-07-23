@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>測定結果グラフ分析</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 2em;
+            background-color: #f8f9fa;
+        }
+        h1, h2 {
+            color: #343a40;
+        }
+        .graph-container {
+            margin-top: 2em;
+            background: white;
+            border: 1px solid #dee2e6;
+            padding: 1em;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .back-button {
+            margin-top: 2em;
+            display: inline-block;
+            padding: 0.5em 1em;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+        .back-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>測定結果のグラフ表示</h1>
+
+    {% if graph %}
+    <div class="graph-container">
+        <h2>生成されたグラフ</h2>
+        <img src="data:image/png;base64,{{ graph }}" alt="測定グラフ">
+    </div>
+    {% else %}
+    <p>グラフがまだ生成されていません。</p>
+    {% endif %}
+
+    <a href="{{ url_for('iris.index') }}" class="back-button">トップに戻る</a>
+</body>
+</html>

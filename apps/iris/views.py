@@ -7,6 +7,11 @@ from pathlib import Path
 from apps.iris.models import Customer
 from apps.iris.forms import CustomerForm
 import json
+import pandas as pd
+import matplotlib.pyplot as plt
+import io
+import base64
+import numpy as np
 
 # Blueprintを使ってauthを生成する
 iris = Blueprint(
@@ -55,7 +60,6 @@ def run_external():
     if result_path.exists():
         with open(result_path, "r", encoding="utf-8") as f:
             result = json.load(f)
-            print(result)
     else:
         flash("測定結果が見つかりませんでした")
         return redirect(url_for("iris.index"))
@@ -75,8 +79,11 @@ def run_external():
     session.pop("customer_data", None)  # 一時データ削除
     flash("顧客情報と測定結果を保存しました")
 
-    # 処理後に index に戻る
-    return redirect(url_for("iris.index")) 
+    # # 処理後に index に戻る
+    # return redirect(url_for("iris.index")) 
+    # 処理後に analyze でグラフ表示
+    return redirect(url_for("iris.analyze")) 
+
 
 # 一時的に顧客データを保存
 @iris.route("/save_customer_temp", methods=["POST"])
@@ -89,3 +96,75 @@ def save_customer_temp():
     }
     return redirect(url_for("iris.run_external"))
 
+@iris.route('/analyze', methods=['GET'])
+def analyze():
+    graph = None
+    result_path = Path(current_app.root_path).parent / "result.json"
+    
+    if not result_path.exists():
+        flash("測定結果ファイルが存在しません")
+        return redirect(url_for("iris.index"))
+
+    try:
+        with open(result_path, "r", encoding="utf-8") as f:
+            result = json.load(f)
+    except Exception as e:
+        flash(f"測定結果の読み込みに失敗しました: {e}")
+        return redirect(url_for("iris.index"))
+
+    ### グラフ描画処理（元のロジックを活用）
+    fig, axes = plt.subplots(1, 2, figsize=(10, 4), sharey=True)
+    fig.subplots_adjust(top=0.75, bottom=0.1)
+
+    # 明るさ（RGB）グラフ
+    # 該当テストデータを抽出
+    target = next((r for r in result if r["test_name"] == "ホワイト(B)決定結果"), None)
+    if not target:
+        flash("グラフ描画用の測定結果が見つかりませんでした")
+        return redirect(url_for("iris.index"))
+    # グラフ用の数値取得
+    values = [target["target_r"], target["target_g"], target["target_b"]]
+    #values = [result["R"], result["G"], result["B"]]
+    labels = ['R', 'G', 'B']
+    colors1 = ['blue', 'green', 'red']
+    axes[0].bar(labels, values, color=colors1)
+    axes[0].set_ylim(0, 100)
+    axes[0].set_title('Brightness characteristic')
+    axes[0].set_yticks(range(0, 101, 10))
+    for y in range(0, 101, 10):
+        axes[0].axhline(y=y, color='lightgray', linestyle='--', linewidth=0.5)
+
+    # 色バランス（例：G cut/R cut） ← result.jsonの構造に応じて調整
+    # 対象データを抽出
+    green_test = next((r for r in result if r["test_name"] == "緑色視感度測定結果"), None)
+    red_test = next((r for r in result if r["test_name"] == "赤色視感度測定結果"), None)
+    # 初期化
+    val_g = val_r = 0
+    if green_test and red_test:
+        big_r = green_test["big_r"]
+        big_g = green_test["big_g"]
+
+        g_loss = (big_g - green_test["target_g"]) / big_g * 100
+        r_loss = (big_r - red_test["target_r"]) / big_r * 100
+
+        val_g = round(g_loss, 2)
+        val_r = round(r_loss, 2)
+    values2 = [val_g, val_r]
+    #values2 = [result.get("G_cut", 0), result.get("R_cut", 0)]
+    labels2 = ['G cut', 'R cut']
+    colors2 = ['green', 'red']
+    axes[1].bar(labels2, values2, color=colors2)
+    axes[1].set_ylim(0, 100)
+    axes[1].set_title('Color balance')
+    axes[1].set_yticks(range(0, 101, 10))
+    for y in range(0, 101, 10):
+        axes[1].axhline(y=y, color='lightgray', linestyle='--', linewidth=0.5)
+
+    # グラフをBase64化してHTMLに渡す
+    img = io.BytesIO()
+    plt.savefig(img, format='png')
+    img.seek(0)
+    graph = base64.b64encode(img.getvalue()).decode()
+    plt.close()
+
+    return render_template('iris/analyze.html', graph=graph)
