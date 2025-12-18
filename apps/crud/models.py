@@ -18,8 +18,8 @@ class User(db.Model, UserMixin):
         db.DateTime, default=datetime.now, onupdate=datetime.now
     )
 
-    # backrefを利用し relation情報を設定する
-    user_images = db.relationship("UserImage", backref="user", order_by="desc(UserImage.id)")
+    # # backrefを利用し relation情報を設定する
+    # user_images = db.relationship("UserImage", backref="user", order_by="desc(UserImage.id)")
 
     # パスワードをセットするためのプロパティ
     @property

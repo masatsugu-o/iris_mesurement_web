@@ -17,9 +17,8 @@
         <!-- ナビゲーションバーを作成する -->
          <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container">
-                <!--
-                <a class="navbar-brand" href="{{ url_for('detector.index') }}">イリスヒュー測定システム</a>
-                -->
+                <!-- 以下の一文は{# #}でコメントアウトしている　-->
+                {# <a class="navbar-brand" href="{{ url_for('detector.index') }}">イリスヒュー測定システム</a> #}
                 <span class="navbar-brand">イリスヒュー測定システム</span>
                 <ul class="navbar-nav">
                     {% if current_user.is_authenticated %}

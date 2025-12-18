@@ -57,12 +57,12 @@ def create_app(config_key):
     # register_blueprintを使いviewsのauthをアプリへ登録する
     app.register_blueprint(auth_views.auth, url_prefix="/auth") 
 
-    # detectorパッケージからviewsをimportする
-    from apps.detector import views as dt_views
+    # # detectorパッケージからviewsをimportする
+    # from apps.detector import views as dt_views
 
-    # register_blueprintを使いviewsのdtをアプリへ登録する
-    #app.register_blueprint(dt_views.dt)
-    app.register_blueprint(dt_views.dt, url_prefix="/detector") 
+    # # register_blueprintを使いviewsのdtをアプリへ登録する
+    # #app.register_blueprint(dt_views.dt)
+    # app.register_blueprint(dt_views.dt, url_prefix="/detector") 
 
     from apps.iris import views as iris_views
     app.register_blueprint(iris_views.iris, url_prefix="/iris") 
